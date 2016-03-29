@@ -125,9 +125,12 @@ function mapToFinalResult(item) {
     return {value: results, key: {count: count, property: item.key[0]}};
 }
 
+var event_selectors = [];
+event_selectors.push({event: 'P3DUser'});
+
 function main() {
     if (params.people_prop) {
-        return join(Events({from_date: params.from_date, to_date: params.to_date}), People())
+        return join(Events({from_date: params.from_date, to_date: params.to_date, event_selectors: event_selectors}), People())
         .filter(item => item.event)
         .groupByUser(createState)
         .filter(item => params.end_event? item.value.done && item.value.active : item && item.value.sequence.length > 0)
@@ -143,7 +146,7 @@ function main() {
         .map(mapToFinalResult);
     }
     else {
-        return Events({from_date: params.from_date, to_date: params.to_date})
+        return Events({from_date: params.from_date, to_date: params.to_date, event_selectors: event_selectors})
         .groupByUser(createState)
         .filter(item => params.end_event? item.value.done && item.value.active : item && item.value.sequence.length > 0)
         .map(item => ({sequence: _.chain(item.value.sequence)
