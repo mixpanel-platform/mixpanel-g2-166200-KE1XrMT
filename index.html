@@ -58,10 +58,12 @@ function createState(state, items) {
             state.start_time = event.time;
         }
         if (state.active && !state.done && (params.end_event&&!params.start_event || !state.start_time || event.time - params.conversion_length <= state.start_time)) {
-            if (event.name == 'P3DUser')
+            if (event.name == 'P3DUser') {
               state.sequence.push({name: event.name + ' - ' + event.properties.eventName, time: event.time});
-            else
+            }
+            else {
               state.sequence.push({name: event.name, time: event.time});
+            }
             state.start_time = state.start_time? state.start_time : event.time;
             state.propval = params.people_prop? event.properties[params.people_prop] : event.properties[params.property];
             state.done = event.name == params.end_event;
